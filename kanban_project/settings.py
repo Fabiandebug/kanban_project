@@ -10,11 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import json
+import os
+from configparser import ConfigParser
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+config = ConfigParser()
+config.read(Path(BASE_DIR, "config.ini"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,7 +29,14 @@ SECRET_KEY = 'django-insecure-3b@g8k@3$p=f=uitkal-g&mq2vnnkkra^53&*la*7c$(nxx_k+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    
+]
 
 
 # Application definition
@@ -39,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'graphene_django',
     'kanban_app',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +62,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+     
 ]
 
 ROOT_URLCONF = 'kanban_project.urls'
@@ -71,14 +87,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kanban_project.wsgi.application'
 
+APPEND_SLASH = False
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    "default": {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # "ENGINE": config.get("database", "ENGINE"),s
+        # "NAME": config.get("database", "NAME"),
+        # "HOST": config.get("database", "HOST"),
+        # "PORT": config.get("database", "PORT"),
     }
 }
 
