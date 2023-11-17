@@ -1,0 +1,14 @@
+[base]
+SECRET_KEY = 
+DEBUG = True
+
+[database]
+ENGINE = django_dynamodb_backend
+NAME = 
+HOST = 
+PORT = 
+
+
+
+[timezone]
+TIME_ZONE=
